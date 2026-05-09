@@ -1,0 +1,38 @@
+<?php
+
+require __DIR__ . '/helpers.php';
+
+$uri = $_SERVER['REQUEST_URI'];
+$path = parse_url($uri, PHP_URL_PATH);
+
+// Subfolder handling for /ws03/
+$baseDir = '/ws03';
+if (str_starts_with($path, $baseDir)) {
+    $path = substr($path, strlen($baseDir));
+}
+if ($path === '') {
+    $path = '/';
+}
+
+// Serve static files from public folder
+if ($path !== '/' && file_exists(__DIR__ . '/public' . $path)) {
+    if (preg_match('/\.css$/', $path)) {
+        header('Content-Type: text/css');
+    } elseif (preg_match('/\.jpg$|\.jpeg$|\.png$|\.gif$|\.svg$/', $path)) {
+        header('Content-Type: image/' . pathinfo($path, PATHINFO_EXTENSION));
+    }
+    readfile(__DIR__ . '/public' . $path);
+    exit;
+}
+
+require basePath('Router.php');
+require basePath('Database.php');
+
+
+$router = new Router();
+
+require basePath('routes.php');
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+$router->route($path, $method);
