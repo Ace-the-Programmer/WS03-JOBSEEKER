@@ -26,10 +26,15 @@ class Database
         }
     }
 
-    public function Query($Query)
+    public function Query($query, $params = [])
     {
         try {
-            $sth = $this->conn->prepare($Query);
+            $sth = $this->conn->prepare($query);
+
+            foreach ($params as $param => $value) {
+                $sth->bindValue(':' . $param, $value);
+            }
+
             $sth->execute();
             return $sth;
         } catch (PDOException $e) {

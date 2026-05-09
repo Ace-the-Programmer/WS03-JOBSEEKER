@@ -1,5 +1,17 @@
 <?php
 
-loadView('listings/show');
+$config = require basePath('config/db.php');
+$db = new Database($config);
 
-$router->get('listing', 'controllers/listings/show.php');
+$id = $_GET['id'] ?? '';
+
+$params = [
+    'id' => $id
+];
+
+$listing = $db->Query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+// inspect($listing);
+loadView('listings/show', [
+    'listing' => $listing
+]);
