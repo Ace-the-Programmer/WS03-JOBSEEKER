@@ -18,13 +18,13 @@ if ($path !== '/' && file_exists(__DIR__ . '/public' . $path)) {
     exit;
 }
 
-require basePath('Router.php');
+require basePath('Framework/Router.php');
 
 $router = new Router();
 
 require basePath('Routes.php');
 
-require basePath('Database.php');
+require basePath('Framework/Database.php');
 
 $method = $_SERVER['REQUEST_METHOD'];
 
