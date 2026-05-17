@@ -22,12 +22,17 @@ class Authorize
      * @param string $role
      * @return bool
      */
-    public function handle($role){
-        if ($role === 'guest' && 
-        $this->isAuthenticated()) {
+    public function handle($role)
+    {
+        if (
+            $role === 'guest' &&
+            $this->isAuthenticated()
+        ) {
             return redirect('/');
-        } elseif($role === 'auth' && 
-        !$this->isAuthenticated()){
+        } elseif (
+            $role === 'auth' &&
+            !$this->isAuthenticated()
+        ) {
             return redirect('/auth/login');
         }
     }
