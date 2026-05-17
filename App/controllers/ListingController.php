@@ -175,10 +175,9 @@ class ListingController
 
         //Authorization
         if (!Authorization::isOwner($listing->user_id)) {
-            $_SESSION['error_message'] = 'You are not authorized to update this listing';
+            Session::setFlashMessage('error_message', 'You are not authorized to update this listing');
             return redirect('/listings/' . $listing->id);
         }
-
         loadView('listings/edit', [
             'listing' => $listing
         ]);
@@ -208,7 +207,7 @@ class ListingController
 
         //Authorization
         if (!Authorization::isOwner($listing->user_id)) {
-            $_SESSION['error_message'] = 'You are not authorized to update this listing';
+            Session::setFlashMessage('error_message', 'You are not authorized to update this listing');
             return redirect('/listings/' . $listing->id);
         }
 
@@ -269,5 +268,31 @@ class ListingController
 
             redirect('/listings/' . $id);
         }
+    }
+
+    /**
+     * Search listings by keyword/location
+     * 
+     * @return void
+     */
+    public function search()
+    {
+        $keywords = isset($_GET['keywords']) ? trim($_GET['keywords']) : '';
+        $location = isset($_GET['location']) ? trim($_GET['location']) : '';
+
+        $query = "SELECT * FROM listings WHERE (title LIKE :keywords OR description LIKE :keywords OR tags LIKE :keywords OR company LIKE :keywords) AND (city LIKE :location OR state LIKE :location)";
+
+        $params = [
+            'keywords' => "%{$keywords}%",
+            'location' => "%{$location}%"
+        ];
+
+        $listings = $this->db->query($query, $params)->fetchAll();
+
+        loadView('listings/index', [
+            'listings' => $listings,
+            'keywords' => $keywords,
+            'location' => $location
+        ]);
     }
 }
