@@ -265,7 +265,7 @@ class ListingController
 
             $this->db->query($updateQuery, $updateValues);
 
-            $_SESSION['success_message'] = 'Listing Updated';
+            Session::setFlashMessage('success_message', 'Listing updated successfully');
 
             redirect('/listings/' . $id);
         }

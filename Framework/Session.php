@@ -82,9 +82,9 @@ class Session
      * @param string $message
      * @return void
      */
-    public static function setFlashMessage($key, $message)
+    public static function setFlashMessage($key, $message, $default = null)
     {
-        self::set('flash_' . $key, $message);
+        self::set('flash_' . $key, $message, $default);
     }
 
     /**
